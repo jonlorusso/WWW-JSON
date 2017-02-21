@@ -46,6 +46,7 @@ around http_request => sub {
 };
 
 with qw/WWW::JSON::Role::Authentication::Basic
+  WWW::JSON::Role::Authentication::HMAC
   WWW::JSON::Role::Authentication::OAuth1
   WWW::JSON::Role::Authentication::OAuth2
   WWW::JSON::Role::Authentication::Header
