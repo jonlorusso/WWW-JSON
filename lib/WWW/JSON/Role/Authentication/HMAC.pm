@@ -19,15 +19,19 @@ sub _validate_HMAC {
     }
 }
 
+sub _canonical_request {
+    my ( $self, $req, $date ) = @_;
+    my @parts = ( $req->method, $req->uri, $date );
+    push @parts, $req->header('Content_Type') if $req->method eq 'POST';
+    push @parts, $req->content if $req->method eq 'POST';
+    return join '' => @parts;
+}
+
 sub _auth_HMAC {
     my ( $self, $auth, $req ) = @_;
 
     my $date = DateTime->now->strftime('%Y-%m-%dT%H:%M:%SZ');
-
-    my @parts = ( $req->method, $req->uri, $date );
-    push @parts, ( $self->content_type, $req->content ) if $req->method eq 'POST';
-    my $canonical_request = join '' => @parts;
-
+    my $canonical_request = $self->_canonical_request($req, $date);
     my $secret = decode_base64( $auth->{api_secret} );
     my $signature = encode_base64 hmac( $canonical_request, $secret, \&sha256 );
     chomp $signature;
