@@ -1,7 +1,6 @@
 package WWW::JSON::Role::Authentication::HMAC;
 
 use Moo::Role;
-use Safe::Isa;
 use DateTime;
 use MIME::Base64 qw( decode_base64 encode_base64 );
 use Digest::SHA qw(sha256);
